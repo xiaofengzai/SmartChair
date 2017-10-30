@@ -13,7 +13,7 @@ public class TaskThread implements Runnable {
             Set<String> set=NettyChannelMap.getMap().keySet();
             for(String key:set){
                 SocketChannel socketChannel=(SocketChannel)NettyChannelMap.get(key);
-                MsgInfo payMsg=new MsgInfo(Constant.PAY);
+                MessageInfo payMsg=new MessageInfo(Constant.PAY);
                 payMsg.setMsgBody(10);
                 socketChannel.writeAndFlush(payMsg);
                 System.out.println(key);

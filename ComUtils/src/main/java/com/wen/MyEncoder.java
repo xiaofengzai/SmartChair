@@ -11,10 +11,10 @@ import java.io.ObjectOutputStream;
 /**
  * Created by wenfeng on 2017/10/24.
  */
-public class MyEncoder extends MessageToByteEncoder<MsgInfo> {
+public class MyEncoder extends MessageToByteEncoder<MessageInfo> {
 
-    protected void encode(ChannelHandlerContext channelHandlerContext, MsgInfo msgInfo, ByteBuf byteBuf) throws Exception {
-        byte[] body = toByteArray(msgInfo);  //将对象转换为byte，伪代码，具体用什么进行序列化，你们自行选择。可以使用我上面说的一些
+    protected void encode(ChannelHandlerContext channelHandlerContext, MessageInfo messageInfo, ByteBuf byteBuf) throws Exception {
+        byte[] body = toByteArray(messageInfo);  //将对象转换为byte，伪代码，具体用什么进行序列化，你们自行选择。可以使用我上面说的一些
         if(body.length!=Constant.PACKET_LENGTH){
             channelHandlerContext.close();
         }else{

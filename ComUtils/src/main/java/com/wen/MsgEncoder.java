@@ -11,9 +11,9 @@ import java.io.ObjectOutputStream;
 /**
  * Created by wenfeng on 2017/10/24.
  */
-public class MsgEncoder extends MessageToByteEncoder<MsgInfo> {
-    protected void encode(ChannelHandlerContext channelHandlerContext, MsgInfo msgInfo, ByteBuf byteBuf) throws Exception {
-        byte[] body = toByteArray(msgInfo);  //将对象转换为byte，伪代码，具体用什么进行序列化，你们自行选择。可以使用我上面说的一些
+public class MsgEncoder extends MessageToByteEncoder<MessageInfo> {
+    protected void encode(ChannelHandlerContext channelHandlerContext, MessageInfo messageInfo, ByteBuf byteBuf) throws Exception {
+        byte[] body = toByteArray(messageInfo);  //将对象转换为byte，伪代码，具体用什么进行序列化，你们自行选择。可以使用我上面说的一些
         if(body.length!=Constant.PACKET_LENGTH){
             channelHandlerContext.close();
         }else{
@@ -22,18 +22,18 @@ public class MsgEncoder extends MessageToByteEncoder<MsgInfo> {
         }
     }
 
-    public byte[] toByteArray (MsgInfo msgInfo) {
+    public byte[] toByteArray (MessageInfo messageInfo) {
         byte[] bytes = new byte[Constant.PACKET_LENGTH];
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream oos = null;
-        if(msgInfo.getMagicNumber()!=Constant.MAGIC_NUMBER){
+        if(messageInfo.getMagicNumber()!=Constant.MAGIC_NUMBER){
             return null;
         }
         try {
             oos = new ObjectOutputStream(bos);
             oos.writeInt(Constant.MAGIC_NUMBER);
-            oos.writeInt(msgInfo.getMsgType());
-            oos.writeInt(msgInfo.getMsgBody());
+            oos.writeInt(messageInfo.getMsgType());
+            oos.writeInt(messageInfo.getMsgBody());
             oos.flush();
             bytes = bos.toByteArray ();
             oos.close();

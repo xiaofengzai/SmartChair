@@ -5,13 +5,13 @@ import java.io.Serializable;
 /**
  * Created by wenfeng on 2017/10/24.
  */
-public class MsgInfo implements Serializable {
+public class MessageInfo implements Serializable {
     private static final long serialVersionUID = 1L;
     private Integer magicNumber;
     private Integer msgType;
     private Integer msgBody;
-    public MsgInfo(){}
-    public MsgInfo(Integer msgType){
+    public MessageInfo(){}
+    public MessageInfo(Integer msgType){
         this.msgType=msgType;
         this.magicNumber=Constant.MAGIC_NUMBER;
         this.msgBody=0x00;

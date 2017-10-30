@@ -1,17 +1,14 @@
 package com.wen;
 
+import com.wen.proto.SmartChairProto;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.serialization.ClassResolvers;
-import io.netty.handler.codec.serialization.ObjectDecoder;
-import io.netty.handler.codec.serialization.ObjectEncoder;
-
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 
 
 /**
@@ -38,11 +35,12 @@ public class NettyServerBootstrap {
             @Override
             protected void initChannel(SocketChannel socketChannel) throws Exception {
                 ChannelPipeline p = socketChannel.pipeline();
-                p.addLast(new MsgEncoder());
-                p.addLast(new MyFixedLengthDecoder(Constant.PACKET_LENGTH));
+                p.addFirst("decoder", new ProtobufVarint32FrameDecoder());
+                p.addLast(new ProtobufDecoder(SmartChairProto.MsgInfo.getDefaultInstance()));
 //                p.addLast(new ObjectEncoder());
 //                p.addLast(new ObjectDecoder(ClassResolvers.cacheDisabled(null)));
-                p.addLast(new NettyServerHandler());
+                p.addLast(new ProtobufEncoder());
+                p.addLast(new ServerHandler());
             }
         });
         ChannelFuture f= bootstrap.bind(port).sync();
